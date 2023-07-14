@@ -4,12 +4,15 @@ import math
 import sys
 import neat
 
+pygame.init()
+
 SCREEN_WIDTH = 1244
 SCREEN_HEIGHT = 1016
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 TRACK = pygame.image.load(os.path.join("track.png"))
 
+FONT = pygame.font.Font('freesansbold.ttf', 20)
 
 class Car(pygame.sprite.Sprite):
     def __init__(self):
@@ -34,7 +37,7 @@ class Car(pygame.sprite.Sprite):
         self.data()
 
     def drive(self):
-        self.rect.center += self.vel_vector * 6
+        self.rect.center += self.vel_vector * 7
 
     def collision(self):
         length = 40
@@ -109,14 +112,19 @@ def eval_genomes(genomes, config):
         nets.append(net)
         genome.fitness = 0
 
+
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
         SCREEN.blit(TRACK, (0, 0))
+
+        text_1 = FONT.render(f'Cars Alive:  {str(len(cars))}', True, (0, 0, 0))
+        text_2 = FONT.render(f'Generation:  {pop.generation + 1}', True, (0, 0, 0))
+        SCREEN.blit(text_1, (50, 750))
+        SCREEN.blit(text_2, (50, 700))
 
         if len(cars) == 0:
             break
@@ -140,6 +148,7 @@ def eval_genomes(genomes, config):
             car.draw(SCREEN)
             car.update()
         pygame.display.update()
+
 
 
 # Setup NEAT Neural Network
